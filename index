@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修学旅行シミュレーション</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #4a69bd;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #6a89cc;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .item {
+            background-color: #f9f9fb;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        .item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e6f7ff;
+            border-radius: 8px;
+            border: 1px solid #b3e0ff;
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        #totalCost8, #totalCost10 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .info {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #4a69bd;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #3b5093;
+        }
+        #checkResult, #message {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .tax-section {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>修学旅行シミュレーション</h1>
+    <p>予算：**3000円**（税込み）</p>
+    <p class="info">※軽減税率（8%）対象：**昼食、クッキー、チョコ、あめ、靴下**</p>
+    <p class="info">※標準税率（10%）対象：**ぬいぐるみ、カチューシャ、Tシャツ**</p>
+
+    <div class="section">
+        <h2>昼食を選ぶ</h2>
+        <div class="item">
+            <label for="lunch">昼食を選んでください：</label>
+            <select id="lunch">
+                <option value="800">そば（800円）</option>
+                <option value="1000">カレーライス（1000円）</option>
+                <option value="1200">焼肉定食（1200円）</option>
+                <option value="500">かけうどん（500円）</option>
+                <option value="160">メロンパン（160円）</option>
+                <option value="780">ハンバーグ（780円）</option>
+                <option value="1050">オムライス（1050円）</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>お土産の個数を選ぶ</h2>
+        <p class="info">※チョコは2箱買うごとに150円値引きされます。</p>
+        <div class="item-list">
+            <div class="item">
+                <label for="choco">チョコ（1箱 400円）：</label>
+                <input type="number" id="choco" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="candy">あめ（1箱 450円）：</label>
+                <input type="number" id="candy" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="plush">ぬいぐるみ（1個 1800円）：</label>
+                <input type="number" id="plush" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="headband">カチューシャ（1個 900円）：</label>
+                <input type="number" id="headband" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="cookie">クッキー（1箱 370円）：</label>
+                <input type="number" id="cookie" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="tshirt">Tシャツ（1枚 1320円）：</label>
+                <input type="number" id="tshirt" value="0" min="0" max="10">
+            </div>
+            <div class="item">
+                <label for="socks">靴下（1足 510円）：</label>
+                <input type="number" id="socks" value="0" min="0" max="10">
+            </div>
+        </div>
+    </div>
+
+    <div class="result">
+        <h3>計算結果</h3>
+        <p>税抜合計金額（8%）：<span id="totalCost8">0</span>円</p>
+        <p>税抜合計金額（10%）：<span id="totalCost10">0</span>円</p>
+        
+        <div class="tax-section item">
+            <label for="taxIncludedInput8">税込み合計金額（8%）はいくら？：</label>
+            <input type="number" id="taxIncludedInput8" placeholder="ここに答えを入力">
+        </div>
+        
+        <div class="tax-section item">
+            <label for="taxIncludedInput10">税込み合計金額（10%）はいくら？：</label>
+            <input type="number" id="taxIncludedInput10" placeholder="ここに答えを入力">
+        </div>
+        
+        <button id="payButton" class="button">支払い</button>
+
+        <p id="checkResult" style="margin-top: 15px;"></p>
+        <p id="message" style="margin-top: 10px;"></p>
+    </div>
+
+</div>
+
+<script>
+    const budget = 3000;
+    const taxRate8 = 0.08;
+    const taxRate10 = 0.10;
+
+    const lunchSelect = document.getElementById('lunch');
+    const chocoInput = document.getElementById('choco');
+    const candyInput = document.getElementById('candy');
+    const plushInput = document.getElementById('plush');
+    const headbandInput = document.getElementById('headband');
+    const cookieInput = document.getElementById('cookie');
+    const tshirtInput = document.getElementById('tshirt');
+    const socksInput = document.getElementById('socks');
+
+    const taxIncludedInput8 = document.getElementById('taxIncludedInput8');
+    const taxIncludedInput10 = document.getElementById('taxIncludedInput10');
+    const payButton = document.getElementById('payButton');
+
+    const totalCostSpan8 = document.getElementById('totalCost8');
+    const totalCostSpan10 = document.getElementById('totalCost10');
+    const checkResultSpan = document.getElementById('checkResult');
+    const messageSpan = document.getElementById('message');
+
+    function calculateCost() {
+        const lunchCost = parseInt(lunchSelect.value, 10) || 0;
+        const chocoCount = parseInt(chocoInput.value, 10) || 0;
+        const candyCount = parseInt(candyInput.value, 10) || 0;
+        const plushCount = parseInt(plushInput.value, 10) || 0;
+        const headbandCount = parseInt(headbandInput.value, 10) || 0;
+        const cookieCount = parseInt(cookieInput.value, 10) || 0;
+        const tshirtCount = parseInt(tshirtInput.value, 10) || 0;
+        const socksCount = parseInt(socksInput.value, 10) || 0;
+
+        // 8%対象商品の合計を計算
+        let totalCost8 = lunchCost + (chocoCount * 400) + (candyCount * 450) + (cookieCount * 370) + (socksCount * 510);
+        const discountCount = Math.floor(chocoCount / 2);
+        totalCost8 -= discountCount * 150;
+        
+        // 10%対象商品の合計を計算
+        const totalCost10 = (plushCount * 1800) + (headbandCount * 900) + (tshirtCount * 1320);
+        
+        totalCostSpan8.textContent = totalCost8;
+        totalCostSpan10.textContent = totalCost10;
+
+        checkResultSpan.textContent = '';
+        messageSpan.textContent = '';
+    }
+
+    function checkAnswer() {
+        const totalCost8BeforeTax = parseInt(totalCostSpan8.textContent, 10);
+        const totalCost10BeforeTax = parseInt(totalCostSpan10.textContent, 10);
+
+        const correctTaxIncludedCost8 = Math.floor(totalCost8BeforeTax * (1 + taxRate8));
+        const correctTaxIncludedCost10 = Math.floor(totalCost10BeforeTax * (1 + taxRate10));
+        
+        const userTaxIncludedInput8 = parseInt(taxIncludedInput8.value, 10);
+        const userTaxIncludedInput10 = parseInt(taxIncludedInput10.value, 10);
+        
+        if (isNaN(userTaxIncludedInput8) || isNaN(userTaxIncludedInput10)) {
+            checkResultSpan.textContent = `金額を両方入力してください。`;
+            checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '';
+            return;
+        }
+
+        let is8PercentCorrect = (userTaxIncludedInput8 === correctTaxIncludedCost8);
+        let is10PercentCorrect = (userTaxIncludedInput10 === correctTaxIncludedCost10);
+        
+        if (is8PercentCorrect && is10PercentCorrect) {
+            const finalTotalCost = correctTaxIncludedCost8 + correctTaxIncludedCost10;
+            checkResultSpan.textContent = `両方の計算が正解です！✅ 合計金額は ${finalTotalCost} 円です。`;
+            checkResultSpan.style.color = 'green';
+            
+            if (finalTotalCost > budget) {
+                messageSpan.textContent = `残念、予算を ${finalTotalCost - budget} 円オーバーして買えません。`;
+                messageSpan.style.color = 'red';
+            } else {
+                messageSpan.textContent = `予算内で収まっています。素晴らしい！🎉`;
+                messageSpan.style.color = 'green';
+            }
+
+        } else if (is8PercentCorrect && !is10PercentCorrect) {
+            checkResultSpan.textContent = `8%の計算は合っていますが、10%の計算が違います。😥`;
+            checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '';
+        } else if (!is8PercentCorrect && is10PercentCorrect) {
+            checkResultSpan.textContent = `10%の計算は合っていますが、8%の計算が違います。😥`;
+            checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '';
+        } else {
+            checkResultSpan.textContent = `どちらの計算も違います...😥 もう一度チャレンジしましょう。`;
+            checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '';
+        }
+    }
+
+    // イベントリスナーを設定
+    lunchSelect.addEventListener('change', calculateCost);
+    chocoInput.addEventListener('input', calculateCost);
+    candyInput.addEventListener('input', calculateCost);
+    plushInput.addEventListener('input', calculateCost);
+    headbandInput.addEventListener('input', calculateCost);
+    cookieInput.addEventListener('input', calculateCost);
+    tshirtInput.addEventListener('input', calculateCost);
+    socksInput.addEventListener('input', calculateCost);
+    
+    payButton.addEventListener('click', checkAnswer);
+
+    // 最初の計算を実行
+    calculateCost();
+</script>
+
+</body>
+</html>
