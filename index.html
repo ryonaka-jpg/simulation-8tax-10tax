@@ -61,7 +61,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        select, input[type="number"] {
+        select, input[type="number"], input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -115,12 +115,23 @@
         .tax-section {
             margin-top: 20px;
         }
+        .step-container {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #4a69bd;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>予算シミュレーション</h1>
+    <h1>修学旅行シミュレーション</h1>
     <p>予算：**3000円**（税込み）</p>
     <p class="info">※軽減税率（8%）対象：**昼食、クッキー、チョコ、あめ**</p>
     <p class="info">※標準税率（10%）対象：**ぬいぐるみ、カチューシャ、Tシャツ、靴下**</p>
@@ -181,14 +192,32 @@
         <p>税抜合計金額（8%）：<span id="totalCost8">0</span>円</p>
         <p>税抜合計金額（10%）：<span id="totalCost10">0</span>円</p>
         
-        <div class="tax-section item">
-            <label for="taxIncludedInput8">税込み合計金額（8%）はいくら？：</label>
-            <input type="number" id="taxIncludedInput8" placeholder="ここに答えを入力">
+        <div class="step-container">
+            <div class="step-title">1. 消費税（8%）を計算しよう</div>
+            <input type="text" id="tax8Input" placeholder="例: 1000 × 0.08">
+            <button id="calculateTax8Button" class="button">計算</button>
+            <p>消費税（8%）：<span id="tax8Result">0</span>円</p>
+        </div>
+
+        <div class="step-container">
+            <div class="step-title">2. 税込み金額（8%）を計算しよう</div>
+            <input type="text" id="total8Input" placeholder="例: 1000 + 80">
+            <button id="calculateTotal8Button" class="button">計算</button>
+            <p>税込み金額（8%）：<span id="total8Result">0</span>円</p>
         </div>
         
-        <div class="tax-section item">
-            <label for="taxIncludedInput10">税込み合計金額（10%）はいくら？：</label>
-            <input type="number" id="taxIncludedInput10" placeholder="ここに答えを入力">
+        <div class="step-container">
+            <div class="step-title">3. 消費税（10%）を計算しよう</div>
+            <input type="text" id="tax10Input" placeholder="例: 1000 × 0.10">
+            <button id="calculateTax10Button" class="button">計算</button>
+            <p>消費税（10%）：<span id="tax10Result">0</span>円</p>
+        </div>
+
+        <div class="step-container">
+            <div class="step-title">4. 税込み金額（10%）を計算しよう</div>
+            <input type="text" id="total10Input" placeholder="例: 1000 + 100">
+            <button id="calculateTotal10Button" class="button">計算</button>
+            <p>税込み金額（10%）：<span id="total10Result">0</span>円</p>
         </div>
         
         <button id="payButton" class="button">支払い</button>
@@ -212,9 +241,23 @@
     const cookieInput = document.getElementById('cookie');
     const tshirtInput = document.getElementById('tshirt');
     const socksInput = document.getElementById('socks');
+    
+    const tax8Input = document.getElementById('tax8Input');
+    const calculateTax8Button = document.getElementById('calculateTax8Button');
+    const tax8ResultSpan = document.getElementById('tax8Result');
 
-    const taxIncludedInput8 = document.getElementById('taxIncludedInput8');
-    const taxIncludedInput10 = document.getElementById('taxIncludedInput10');
+    const total8Input = document.getElementById('total8Input');
+    const calculateTotal8Button = document.getElementById('calculateTotal8Button');
+    const total8ResultSpan = document.getElementById('total8Result');
+
+    const tax10Input = document.getElementById('tax10Input');
+    const calculateTax10Button = document.getElementById('calculateTax10Button');
+    const tax10ResultSpan = document.getElementById('tax10Result');
+    
+    const total10Input = document.getElementById('total10Input');
+    const calculateTotal10Button = document.getElementById('calculateTotal10Button');
+    const total10ResultSpan = document.getElementById('total10Result');
+    
     const payButton = document.getElementById('payButton');
 
     const totalCostSpan8 = document.getElementById('totalCost8');
@@ -222,7 +265,14 @@
     const checkResultSpan = document.getElementById('checkResult');
     const messageSpan = document.getElementById('message');
 
-    function calculateCost() {
+    let totalCost8BeforeTax = 0;
+    let totalCost10BeforeTax = 0;
+    let correctTax8 = 0;
+    let correctTax10 = 0;
+    let correctTotal8 = 0;
+    let correctTotal10 = 0;
+
+    function calculateBaseCosts() {
         const lunchCost = parseInt(lunchSelect.value, 10) || 0;
         const chocoCount = parseInt(chocoInput.value, 10) || 0;
         const candyCount = parseInt(candyInput.value, 10) || 0;
@@ -232,83 +282,122 @@
         const tshirtCount = parseInt(tshirtInput.value, 10) || 0;
         const socksCount = parseInt(socksInput.value, 10) || 0;
 
-        // 8%対象商品の合計を計算
-        let totalCost8 = lunchCost + (chocoCount * 400) + (candyCount * 450) + (cookieCount * 370) ;
+        // 8%対象商品の合計を計算 (靴下を削除)
+        totalCost8BeforeTax = lunchCost + (chocoCount * 400) + (candyCount * 450) + (cookieCount * 370);
         const discountCount = Math.floor(chocoCount / 2);
-        totalCost8 -= discountCount * 150;
+        totalCost8BeforeTax -= discountCount * 150;
         
-        // 10%対象商品の合計を計算
-        const totalCost10 = (plushCount * 1800) + (headbandCount * 900) + (tshirtCount * 1320)+ (socksCount * 510);
+        // 10%対象商品の合計を計算 (靴下を追加)
+        totalCost10BeforeTax = (plushCount * 1800) + (headbandCount * 900) + (tshirtCount * 1320) + (socksCount * 510);
         
-        totalCostSpan8.textContent = totalCost8;
-        totalCostSpan10.textContent = totalCost10;
+        totalCostSpan8.textContent = totalCost8BeforeTax;
+        totalCostSpan10.textContent = totalCost10BeforeTax;
 
+        // 正解を事前に計算
+        correctTax8 = Math.floor(totalCost8BeforeTax * taxRate8);
+        correctTax10 = Math.floor(totalCost10BeforeTax * taxRate10);
+        correctTotal8 = totalCost8BeforeTax + correctTax8;
+        correctTotal10 = totalCost10BeforeTax + correctTax10;
+
+        // 表示をリセット
+        tax8ResultSpan.textContent = '0';
+        total8ResultSpan.textContent = '0';
+        tax10ResultSpan.textContent = '0';
+        total10ResultSpan.textContent = '0';
         checkResultSpan.textContent = '';
         messageSpan.textContent = '';
     }
 
-    function checkAnswer() {
-        const totalCost8BeforeTax = parseInt(totalCostSpan8.textContent, 10);
-        const totalCost10BeforeTax = parseInt(totalCostSpan10.textContent, 10);
-
-        const correctTaxIncludedCost8 = Math.floor(totalCost8BeforeTax * (1 + taxRate8));
-        const correctTaxIncludedCost10 = Math.floor(totalCost10BeforeTax * (1 + taxRate10));
-        
-        const userTaxIncludedInput8 = parseInt(taxIncludedInput8.value, 10);
-        const userTaxIncludedInput10 = parseInt(taxIncludedInput10.value, 10);
-        
-        if (isNaN(userTaxIncludedInput8) || isNaN(userTaxIncludedInput10)) {
-            checkResultSpan.textContent = `金額を両方入力してください。`;
-            checkResultSpan.style.color = 'red';
-            messageSpan.textContent = '';
-            return;
-        }
-
-        let is8PercentCorrect = (userTaxIncludedInput8 === correctTaxIncludedCost8);
-        let is10PercentCorrect = (userTaxIncludedInput10 === correctTaxIncludedCost10);
-        
-        if (is8PercentCorrect && is10PercentCorrect) {
-            const finalTotalCost = correctTaxIncludedCost8 + correctTaxIncludedCost10;
-            checkResultSpan.textContent = `両方の計算が正解です！✅ 合計金額は ${finalTotalCost} 円です。`;
-            checkResultSpan.style.color = 'green';
-            
-            if (finalTotalCost > budget) {
-                messageSpan.textContent = `残念、予算を ${finalTotalCost - budget} 円オーバーして買えません。`;
-                messageSpan.style.color = 'red';
+    // 各ステップの計算と判定
+    function evaluateExpression(input, expected) {
+        let expression;
+        try {
+            const sanitizedInput = input.replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/'); // カンマと「×」「÷」を処理
+            expression = eval(sanitizedInput);
+            if (expression === expected) {
+                return true;
             } else {
-                messageSpan.textContent = `予算内で収まっています。素晴らしい！🎉`;
-                messageSpan.style.color = 'green';
+                return false;
             }
-
-        } else if (is8PercentCorrect && !is10PercentCorrect) {
-            checkResultSpan.textContent = `8%の計算は合っていますが、10%の計算が違います。😥`;
-            checkResultSpan.style.color = 'red';
-            messageSpan.textContent = '';
-        } else if (!is8PercentCorrect && is10PercentCorrect) {
-            checkResultSpan.textContent = `10%の計算は合っていますが、8%の計算が違います。😥`;
-            checkResultSpan.style.color = 'red';
-            messageSpan.textContent = '';
-        } else {
-            checkResultSpan.textContent = `どちらの計算も違います...😥 もう一度チャレンジしましょう。`;
-            checkResultSpan.style.color = 'red';
-            messageSpan.textContent = '';
+        } catch(e) {
+            return false;
         }
     }
 
-    // イベントリスナーを設定
-    lunchSelect.addEventListener('change', calculateCost);
-    chocoInput.addEventListener('input', calculateCost);
-    candyInput.addEventListener('input', calculateCost);
-    plushInput.addEventListener('input', calculateCost);
-    headbandInput.addEventListener('input', calculateCost);
-    cookieInput.addEventListener('input', calculateCost);
-    tshirtInput.addEventListener('input', calculateCost);
-    socksInput.addEventListener('input', calculateCost);
-    
-    payButton.addEventListener('click', checkAnswer);
+    calculateTax8Button.addEventListener('click', () => {
+        if (evaluateExpression(tax8Input.value, correctTax8)) {
+            tax8ResultSpan.textContent = correctTax8;
+            tax8ResultSpan.style.color = 'green';
+        } else {
+            tax8ResultSpan.textContent = '計算が違います';
+            tax8ResultSpan.style.color = 'red';
+        }
+    });
 
+    calculateTotal8Button.addEventListener('click', () => {
+        if (evaluateExpression(total8Input.value, correctTotal8)) {
+            total8ResultSpan.textContent = correctTotal8;
+            total8ResultSpan.style.color = 'green';
+        } else {
+            total8ResultSpan.textContent = '計算が違います';
+            total8ResultSpan.style.color = 'red';
+        }
+    });
+
+    calculateTax10Button.addEventListener('click', () => {
+        if (evaluateExpression(tax10Input.value, correctTax10)) {
+            tax10ResultSpan.textContent = correctTax10;
+            tax10ResultSpan.style.color = 'green';
+        } else {
+            tax10ResultSpan.textContent = '計算が違います';
+            tax10ResultSpan.style.color = 'red';
+        }
+    });
+
+    calculateTotal10Button.addEventListener('click', () => {
+        if (evaluateExpression(total10Input.value, correctTotal10)) {
+            total10ResultSpan.textContent = correctTotal10;
+            total10ResultSpan.style.color = 'green';
+        } else {
+            total10ResultSpan.textContent = '計算が違います';
+            total10ResultSpan.style.color = 'red';
+        }
+    });
+
+    payButton.addEventListener('click', () => {
+        if (tax8ResultSpan.textContent === '0' || total8ResultSpan.textContent === '0' || tax10ResultSpan.textContent === '0' || total10ResultSpan.textContent === '0' || tax8ResultSpan.textContent === '計算が違います' || total8ResultSpan.textContent === '計算が違います' || tax10ResultSpan.textContent === '計算が違います' || total10ResultSpan.textContent === '計算が違います') {
+            checkResultSpan.textContent = 'すべての計算を完了してください。';
+            checkResultSpan.style.color = 'red';
+            return;
+        }
+
+        const finalTotalCost = parseInt(total8ResultSpan.textContent, 10) + parseInt(total10ResultSpan.textContent, 10);
+        
+        if (finalTotalCost > budget) {
+            checkResultSpan.textContent = `残念、合計金額 ${finalTotalCost} 円は予算を ${finalTotalCost - budget} 円オーバーしています。`;
+            checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '選び直してみましょう。😥';
+            messageSpan.style.color = 'red';
+        } else {
+            checkResultSpan.textContent = `正解です！✅ 合計金額は ${finalTotalCost} 円です。`;
+            checkResultSpan.style.color = 'green';
+            messageSpan.textContent = `予算内で収まっています。素晴らしい！🎉`;
+            messageSpan.style.color = 'green';
+        }
+    });
+
+    // アイテム選択・個数変更時に再計算
+    lunchSelect.addEventListener('change', calculateBaseCosts);
+    chocoInput.addEventListener('input', calculateBaseCosts);
+    candyInput.addEventListener('input', calculateBaseCosts);
+    plushInput.addEventListener('input', calculateBaseCosts);
+    headbandInput.addEventListener('input', calculateBaseCosts);
+    cookieInput.addEventListener('input', calculateBaseCosts);
+    tshirtInput.addEventListener('input', calculateBaseCosts);
+    socksInput.addEventListener('input', calculateBaseCosts);
+    
     // 最初の計算を実行
-    calculateCost();
+    calculateBaseCosts();
 </script>
 
 </body>
