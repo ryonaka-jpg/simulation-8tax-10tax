@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #e3f2fd; /* 明るい背景色 */
             color: #333;
             display: flex;
             justify-content: center;
@@ -17,26 +17,28 @@
             padding: 20px;
         }
         .container {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             max-width: 600px;
             width: 100%;
             box-sizing: border-box;
         }
         h1 {
             text-align: center;
-            color: #4a69bd;
+            color: #0d47a1; /* より濃い青 */
             margin-bottom: 25px;
-            font-size: 24px;
+            font-size: 28px;
+            border-bottom: 3px solid #b3e5fc;
+            padding-bottom: 10px;
         }
         .section {
             margin-bottom: 30px;
         }
         .section h2 {
-            font-size: 18px;
-            color: #6a89cc;
+            font-size: 20px;
+            color: #1565c0;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 10px;
             margin-bottom: 15px;
@@ -47,14 +49,15 @@
             gap: 15px;
         }
         .item {
-            background-color: #f9f9fb;
-            border: 1px solid #e2e8f0;
+            background-color: #f5f8ff;
+            border: 1px solid #c5d2e0;
             border-radius: 8px;
             padding: 15px;
             transition: all 0.3s ease;
         }
         .item:hover {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
         }
         label {
             display: block;
@@ -63,68 +66,125 @@
         }
         select, input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
         }
         .result {
             margin-top: 30px;
-            padding: 20px;
-            background-color: #e6f7ff;
-            border-radius: 8px;
-            border: 1px solid #b3e0ff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px dashed #42a5f5;
+            background-color: #e1f5fe;
         }
         .result h3 {
             margin-top: 0;
-            color: #007bff;
+            color: #0d47a1;
+            text-align: center;
         }
         #totalCost8, #totalCost10 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #2c3e50;
+            text-align: center;
         }
         .info {
             font-size: 12px;
-            color: #7f8c8d;
+            color: #546e7a;
             margin-top: 5px;
         }
         .button {
             display: block;
             width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            font-size: 16px;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 18px;
             font-weight: bold;
-            color: #fff;
+            color: #fff; /* ボタンの文字色は白に戻しました */
             background-color: #4a69bd;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
         }
         .button:hover {
             background-color: #3b5093;
+            transform: translateY(-2px);
+        }
+        .button:active {
+            transform: translateY(0);
         }
         #checkResult, #message {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             text-align: center;
+            margin-top: 15px;
         }
-        .tax-section {
+        /* 8%と10%の計算ブロックのスタイル分け */
+        .step-container {
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 20px;
         }
-        .step-container {
-            border: 1px solid #e2e8f0;
+        .step-container.tax-8 {
+            background-color: #e8f5e9; /* 薄い緑 */
+            border: 2px solid #66bb6a; /* 緑のボーダー */
+        }
+        .step-container.tax-10 {
+            background-color: #ffebee; /* 薄い赤 */
+            border: 2px solid #ef5350; /* 赤のボーダー */
+        }
+        .step-container .step-title {
+            color: #000; /* 全ステップタイトルを黒に変更 */
+            font-weight: bold;
+        }
+        /* 消費税と税込み金額の表示スタイル */
+        .tax-result, .total-result {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .tax-result {
+            color: #00796b; /* 税金の色 */
+        }
+        .total-result {
+            color: #3f51b5; /* 税込み合計の色 */
+        }
+        .correct-result {
+            color: green;
+        }
+        .wrong-result {
+            color: red;
+        }
+        .total-cost-container {
+            display: flex;
+            justify-content: space-around;
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        .step-title {
-            font-weight: bold;
-            color: #4a69bd;
-            margin-bottom: 10px;
+        .total-cost-container.tax-8-container {
+            border: 2px solid #66bb6a;
+            background-color: #e8f5e9;
+        }
+        .total-cost-container.tax-10-container {
+            border: 2px solid #ef5350;
+            background-color: #ffebee;
+        }
+        .total-cost-box {
+            text-align: center;
+        }
+        .total-cost-box h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #444;
+        }
+        .cost-label.tax-8 {
+            color: #2e7d32;
+        }
+        .cost-label.tax-10 {
+            color: #c62828;
         }
     </style>
 </head>
@@ -154,7 +214,6 @@
 
     <div class="section">
         <h2>お土産の個数を選ぶ</h2>
-        <p class="info">※チョコは2箱買うごとに150円値引きされます。</p>
         <div class="item-list">
             <div class="item">
                 <label for="choco">チョコ（1箱 400円）：</label>
@@ -189,35 +248,45 @@
 
     <div class="result">
         <h3>計算結果</h3>
-        <p>税抜合計金額（8%）：<span id="totalCost8">0</span>円</p>
-        <p>税抜合計金額（10%）：<span id="totalCost10">0</span>円</p>
+        <div class="total-cost-container tax-8-container">
+            <div class="total-cost-box">
+                <h4 class="cost-label tax-8">税抜合計金額（8%）</h4>
+                <p id="totalCost8">0</p>
+            </div>
+        </div>
+        <div class="total-cost-container tax-10-container">
+            <div class="total-cost-box">
+                <h4 class="cost-label tax-10">税抜合計金額（10%）</h4>
+                <p id="totalCost10">0</p>
+            </div>
+        </div>
         
-        <div class="step-container">
+        <div class="step-container tax-8">
             <div class="step-title">1. 消費税（8%）を計算しよう</div>
             <input type="text" id="tax8Input" placeholder="例: 1000 × 0.08">
             <button id="calculateTax8Button" class="button">計算</button>
-            <p>消費税（8%）：<span id="tax8Result">0</span>円</p>
+            <p><span class="tax-result">消費税（8%）：<span id="tax8Result">0</span>円</span></p>
         </div>
 
-        <div class="step-container">
+        <div class="step-container tax-8">
             <div class="step-title">2. 税込み金額（8%）を計算しよう</div>
             <input type="text" id="total8Input" placeholder="例: 1000 + 80">
             <button id="calculateTotal8Button" class="button">計算</button>
-            <p>税込み金額（8%）：<span id="total8Result">0</span>円</p>
+            <p><span class="total-result">税込み金額（8%）：<span id="total8Result">0</span>円</span></p>
         </div>
         
-        <div class="step-container">
+        <div class="step-container tax-10">
             <div class="step-title">3. 消費税（10%）を計算しよう</div>
             <input type="text" id="tax10Input" placeholder="例: 1000 × 0.10">
             <button id="calculateTax10Button" class="button">計算</button>
-            <p>消費税（10%）：<span id="tax10Result">0</span>円</p>
+            <p><span class="tax-result">消費税（10%）：<span id="tax10Result">0</span>円</span></p>
         </div>
 
-        <div class="step-container">
+        <div class="step-container tax-10">
             <div class="step-title">4. 税込み金額（10%）を計算しよう</div>
             <input type="text" id="total10Input" placeholder="例: 1000 + 100">
             <button id="calculateTotal10Button" class="button">計算</button>
-            <p>税込み金額（10%）：<span id="total10Result">0</span>円</p>
+            <p><span class="total-result">税込み金額（10%）：<span id="total10Result">0</span>円</span></p>
         </div>
         
         <button id="payButton" class="button">支払い</button>
@@ -282,12 +351,10 @@
         const tshirtCount = parseInt(tshirtInput.value, 10) || 0;
         const socksCount = parseInt(socksInput.value, 10) || 0;
 
-        // 8%対象商品の合計を計算 (靴下を削除)
+        // 8%対象商品の合計を計算
         totalCost8BeforeTax = lunchCost + (chocoCount * 400) + (candyCount * 450) + (cookieCount * 370);
-        const discountCount = Math.floor(chocoCount / 2);
-        totalCost8BeforeTax -= discountCount * 150;
         
-        // 10%対象商品の合計を計算 (靴下を追加)
+        // 10%対象商品の合計を計算
         totalCost10BeforeTax = (plushCount * 1800) + (headbandCount * 900) + (tshirtCount * 1320) + (socksCount * 510);
         
         totalCostSpan8.textContent = totalCost8BeforeTax;
@@ -304,6 +371,10 @@
         total8ResultSpan.textContent = '0';
         tax10ResultSpan.textContent = '0';
         total10ResultSpan.textContent = '0';
+        tax8ResultSpan.classList.remove('correct-result', 'wrong-result');
+        total8ResultSpan.classList.remove('correct-result', 'wrong-result');
+        tax10ResultSpan.classList.remove('correct-result', 'wrong-result');
+        total10ResultSpan.classList.remove('correct-result', 'wrong-result');
         checkResultSpan.textContent = '';
         messageSpan.textContent = '';
     }
@@ -312,7 +383,7 @@
     function evaluateExpression(input, expected) {
         let expression;
         try {
-            const sanitizedInput = input.replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/'); // カンマと「×」「÷」を処理
+            const sanitizedInput = input.replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/');
             expression = eval(sanitizedInput);
             if (expression === expected) {
                 return true;
@@ -327,47 +398,61 @@
     calculateTax8Button.addEventListener('click', () => {
         if (evaluateExpression(tax8Input.value, correctTax8)) {
             tax8ResultSpan.textContent = correctTax8;
-            tax8ResultSpan.style.color = 'green';
+            tax8ResultSpan.classList.remove('wrong-result');
+            tax8ResultSpan.classList.add('correct-result');
         } else {
             tax8ResultSpan.textContent = '計算が違います';
-            tax8ResultSpan.style.color = 'red';
+            tax8ResultSpan.classList.remove('correct-result');
+            tax8ResultSpan.classList.add('wrong-result');
         }
     });
 
     calculateTotal8Button.addEventListener('click', () => {
         if (evaluateExpression(total8Input.value, correctTotal8)) {
             total8ResultSpan.textContent = correctTotal8;
-            total8ResultSpan.style.color = 'green';
+            total8ResultSpan.classList.remove('wrong-result');
+            total8ResultSpan.classList.add('correct-result');
         } else {
             total8ResultSpan.textContent = '計算が違います';
-            total8ResultSpan.style.color = 'red';
+            total8ResultSpan.classList.remove('correct-result');
+            total8ResultSpan.classList.add('wrong-result');
         }
     });
 
     calculateTax10Button.addEventListener('click', () => {
         if (evaluateExpression(tax10Input.value, correctTax10)) {
             tax10ResultSpan.textContent = correctTax10;
-            tax10ResultSpan.style.color = 'green';
+            tax10ResultSpan.classList.remove('wrong-result');
+            tax10ResultSpan.classList.add('correct-result');
         } else {
             tax10ResultSpan.textContent = '計算が違います';
-            tax10ResultSpan.style.color = 'red';
+            tax10ResultSpan.classList.remove('correct-result');
+            tax10ResultSpan.classList.add('wrong-result');
         }
     });
 
     calculateTotal10Button.addEventListener('click', () => {
         if (evaluateExpression(total10Input.value, correctTotal10)) {
             total10ResultSpan.textContent = correctTotal10;
-            total10ResultSpan.style.color = 'green';
+            total10ResultSpan.classList.remove('wrong-result');
+            total10ResultSpan.classList.add('correct-result');
         } else {
             total10ResultSpan.textContent = '計算が違います';
-            total10ResultSpan.style.color = 'red';
+            total10ResultSpan.classList.remove('correct-result');
+            total10ResultSpan.classList.add('wrong-result');
         }
     });
 
     payButton.addEventListener('click', () => {
-        if (tax8ResultSpan.textContent === '0' || total8ResultSpan.textContent === '0' || tax10ResultSpan.textContent === '0' || total10ResultSpan.textContent === '0' || tax8ResultSpan.textContent === '計算が違います' || total8ResultSpan.textContent === '計算が違います' || tax10ResultSpan.textContent === '計算が違います' || total10ResultSpan.textContent === '計算が違います') {
+        const tax8Correct = tax8ResultSpan.classList.contains('correct-result');
+        const total8Correct = total8ResultSpan.classList.contains('correct-result');
+        const tax10Correct = tax10ResultSpan.classList.contains('correct-result');
+        const total10Correct = total10ResultSpan.classList.contains('correct-result');
+
+        if (!tax8Correct || !total8Correct || !tax10Correct || !total10Correct) {
             checkResultSpan.textContent = 'すべての計算を完了してください。';
             checkResultSpan.style.color = 'red';
+            messageSpan.textContent = '';
             return;
         }
 
